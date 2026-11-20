@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import heroImage from "@/assets/petmatch-hero.png";
+import Reveal from "@/components/compartidos/Reveal";
 import InfoCard from "./InfoCard";
 
 const iconClass = "size-7";
@@ -11,25 +12,25 @@ export default function Hero() {
         <img
           src={heroImage}
           alt="Gato descansando en un hogar acogedor"
-          className="absolute inset-0 h-full w-full object-cover object-[58%_center] sm:object-center"
+          className="anim-zoom-out absolute inset-0 h-full w-full object-cover object-[58%_center] sm:object-center"
         />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(46,40,54,0.92)_0%,rgba(46,40,54,0.66)_38%,rgba(46,40,54,0.08)_75%)]" />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-ink/40 to-transparent" />
 
         <div className="relative mx-auto flex min-h-[700px] max-w-[1440px] items-center px-5 pb-28 pt-32 sm:px-8 lg:px-12 lg:pb-20">
           <div className="max-w-2xl text-background">
-            <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-background/25 bg-background/10 px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] backdrop-blur-md">
+            <p style={{ animationDelay: "150ms" }} className="anim-fade-up mb-5 inline-flex items-center gap-2 rounded-full border border-background/25 bg-background/10 px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] backdrop-blur-md">
               <span className="size-2 rounded-full bg-accent" />
               Adopciones con propósito
             </p>
-            <h1 className="font-heading text-5xl font-bold leading-[0.98] tracking-[-0.035em] sm:text-6xl lg:text-[5.4rem]">
+            <h1 style={{ animationDelay: "280ms" }} className="anim-fade-up font-heading text-5xl font-bold leading-[0.98] tracking-[-0.035em] sm:text-6xl lg:text-[5.4rem]">
               Cada mascota merece un hogar
             </h1>
-            <p className="mt-6 max-w-xl text-base leading-7 text-background/85 sm:text-xl sm:leading-8">
+            <p style={{ animationDelay: "420ms" }} className="anim-fade-up mt-6 max-w-xl text-base leading-7 text-background/85 sm:text-xl sm:leading-8">
               La plataforma que ayuda a refugios a encontrar familias compatibles, gestionar
               adopciones y acompañar cada nueva historia.
             </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <div style={{ animationDelay: "560ms" }} className="anim-fade-up mt-8 flex flex-col gap-3 sm:flex-row">
               <Link to="/registro-refugio" className="button-light justify-center">
                 Registrar mi refugio
                 <span aria-hidden="true">→</span>
@@ -46,6 +47,7 @@ export default function Hero() {
       </div>
 
       <div className="relative z-10 mx-auto -mt-20 grid max-w-[1240px] gap-4 px-5 sm:px-8 md:grid-cols-3 lg:-mt-24">
+        <Reveal delay={0} className="[&>article]:h-full">
         <InfoCard
           title="Para refugios"
           icon={
@@ -63,6 +65,8 @@ export default function Hero() {
         >
           Publica tus mascotas, conoce a los candidatos y gestiona cada adopción con claridad.
         </InfoCard>
+        </Reveal>
+        <Reveal delay={130} className="[&>article]:h-full">
         <InfoCard
           accent
           title="Para adoptantes"
@@ -82,6 +86,8 @@ export default function Hero() {
         >
           Descarga la app Android, completa tu perfil y encuentra a tu mascota compatible.
         </InfoCard>
+        </Reveal>
+        <Reveal delay={260} className="[&>article]:h-full">
         <InfoCard
           title="Seguimiento"
           icon={
@@ -99,6 +105,7 @@ export default function Hero() {
         >
           Acompañamos la adaptación con cinco hitos: 7, 30, 90, 180 y 365 días después de adoptar.
         </InfoCard>
+        </Reveal>
       </div>
     </section>
   );

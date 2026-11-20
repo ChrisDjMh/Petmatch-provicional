@@ -16,7 +16,7 @@ const loginSchema = z.object({
 type LoginValues = z.infer<typeof loginSchema>;
 
 const inputClass =
-  "w-full border bg-background px-4 py-3.5 font-semibold text-ink outline-none transition-colors placeholder:font-normal placeholder:text-ink/40 focus:border-ink focus:ring-2 focus:ring-accent";
+  "w-full rounded-2xl border-2 bg-white px-5 py-3.5 font-semibold text-ink shadow-sm outline-none transition-colors placeholder:font-normal placeholder:text-ink/40 focus:border-ink";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -37,16 +37,16 @@ export default function LoginForm() {
 
   return (
     <div>
-      <p className="eyebrow">Panel web</p>
-      <h2 className="mt-3 font-heading text-4xl font-bold tracking-tight sm:text-5xl">
+      <p style={{ animationDelay: "150ms" }} className="anim-fade-up eyebrow text-ink/70">Panel web</p>
+      <h1 style={{ animationDelay: "230ms" }} className="anim-fade-up mt-3 font-heading text-4xl font-bold tracking-tight sm:text-5xl">
         Iniciar sesión
-      </h2>
-      <p className="mt-3 text-base leading-7 text-ink/70">
+      </h1>
+      <p style={{ animationDelay: "310ms" }} className="anim-fade-up mt-3 text-base leading-7 text-ink/70">
         Escribe tu correo y tu contraseña para entrar a tu panel.
       </p>
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="mt-8 space-y-5">
-        <div>
+        <div style={{ animationDelay: "400ms" }} className="anim-fade-up">
           <label htmlFor="email" className="mb-2 block text-sm font-extrabold">
             Correo electrónico
           </label>
@@ -57,17 +57,17 @@ export default function LoginForm() {
             placeholder="nombre@correo.com"
             aria-invalid={errors.email ? true : undefined}
             aria-describedby={errors.email ? "email-error" : undefined}
-            className={`${inputClass} ${errors.email ? "border-ink" : "border-ink/25"}`}
+            className={`${inputClass} ${errors.email ? "border-ink" : "border-transparent"}`}
             {...register("email")}
           />
           {errors.email && (
-            <p id="email-error" className="mt-2 text-sm font-bold">
+            <p id="email-error" className="anim-error mt-2 text-sm font-bold">
               ⚠ {errors.email.message}
             </p>
           )}
         </div>
 
-        <div>
+        <div style={{ animationDelay: "480ms" }} className="anim-fade-up">
           <label htmlFor="password" className="mb-2 block text-sm font-extrabold">
             Contraseña
           </label>
@@ -79,48 +79,56 @@ export default function LoginForm() {
               placeholder="Tu contraseña"
               aria-invalid={errors.password ? true : undefined}
               aria-describedby={errors.password ? "password-error" : undefined}
-              className={`${inputClass} pr-24 ${errors.password ? "border-ink" : "border-ink/25"}`}
+              className={`${inputClass} pr-24 ${errors.password ? "border-ink" : "border-transparent"}`}
               {...register("password")}
             />
             <button
               type="button"
               onClick={() => setShowPassword((value) => !value)}
               aria-pressed={showPassword}
-              className="absolute inset-y-0 right-0 px-4 text-sm font-extrabold text-ink/70 hover:text-ink"
+              className="absolute inset-y-0 right-0 rounded-r-2xl px-5 text-sm font-extrabold text-ink/70 hover:text-ink"
             >
               {showPassword ? "Ocultar" : "Mostrar"}
             </button>
           </div>
           {errors.password && (
-            <p id="password-error" className="mt-2 text-sm font-bold">
+            <p id="password-error" className="anim-error mt-2 text-sm font-bold">
               ⚠ {errors.password.message}
             </p>
           )}
         </div>
 
-        <div className="text-right">
+        <div style={{ animationDelay: "550ms" }} className="anim-fade-up text-right">
           <Link
             to="/olvide-contrasena"
-            className="text-sm font-extrabold text-ink underline underline-offset-4 hover:text-cards"
+            className="text-sm font-extrabold text-ink underline underline-offset-4 hover:text-ink/70"
           >
             Olvidé mi contraseña
           </Link>
         </div>
 
-        <button type="submit" className="button-primary flex w-full items-center justify-center">
+        <button
+          type="submit"
+          style={{ animationDelay: "620ms" }}
+          className="anim-fade-up flex w-full items-center justify-center rounded-full bg-ink px-6 py-4 font-extrabold text-background transition hover:-translate-y-0.5 hover:bg-ink/85 active:scale-[0.98]"
+        >
           Iniciar sesión
         </button>
       </form>
 
-      <p className="mt-8 border-t border-ink/15 pt-6 text-sm leading-6 text-ink/75">
+      <p style={{ animationDelay: "700ms" }} className="anim-fade-up mt-8 border-t border-ink/20 pt-6 text-sm leading-6 text-ink/80">
         ¿Aún no tienes tu refugio en PetMatch?{" "}
         <Link
           to="/registro-refugio"
-          className="font-extrabold text-ink underline underline-offset-4 hover:text-cards"
+          className="font-extrabold text-ink underline underline-offset-4 hover:text-ink/70"
         >
           Regístralo aquí
         </Link>
         .
+      </p>
+      <p style={{ animationDelay: "780ms" }} className="anim-fade-up mt-4 text-sm leading-6 text-ink/70">
+        ¿Eres adoptante? Usa la app móvil de PetMatch para Android. Este panel web es solo para
+        refugios y administradores.
       </p>
     </div>
   );

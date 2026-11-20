@@ -57,6 +57,11 @@
     transform: translateY(-2px);
   }
 
+  .button-primary:active,
+  .button-light:active {
+    transform: translateY(0) scale(0.97);
+  }
+
   .button-light {
     display: inline-flex;
     align-items: center;
@@ -81,6 +86,61 @@
     text-transform: uppercase;
   }
 
+  /* ---------- Animaciones ---------- */
+  .anim-fade-up {
+    animation: fade-up 800ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .anim-fade-in {
+    animation: fade-in 700ms ease both;
+  }
+
+  .anim-slide-down {
+    animation: slide-down 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .anim-zoom-out {
+    animation: zoom-out 2200ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .anim-error {
+    animation: error-in 280ms ease-out both;
+  }
+
+  .anim-float {
+    animation: float 8s ease-in-out infinite;
+  }
+
+  /* Aparece al hacer scroll (ver components/compartidos/Reveal.tsx) */
+  .reveal {
+    opacity: 0;
+    transform: translateY(1.75rem);
+    transition:
+      opacity 800ms ease,
+      transform 800ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .reveal[data-dir="left"] {
+    transform: translateX(-2.5rem);
+  }
+
+  .reveal[data-dir="right"] {
+    transform: translateX(2.5rem);
+  }
+
+  .reveal[data-dir="scale"] {
+    transform: scale(0.95);
+  }
+
+  .reveal[data-dir="fade"] {
+    transform: none;
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
   .section-title {
     font-family: var(--font-heading);
     font-size: clamp(2.35rem, 5vw, 4.6rem);
@@ -90,7 +150,83 @@
   }
 }
 
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes zoom-out {
+  from {
+    transform: scale(1.12);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes error-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-16px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .anim-fade-up,
+  .anim-fade-in,
+  .anim-slide-down,
+  .anim-zoom-out,
+  .anim-error,
+  .anim-float {
+    animation: none !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
   html {
     scroll-behavior: auto;
   }

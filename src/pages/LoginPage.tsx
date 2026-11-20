@@ -1,44 +1,57 @@
-import Footer from "@/components/compartidos/Footer";
-import Navbar from "@/components/compartidos/Navbar";
+import { Link } from "react-router-dom";
 import LoginForm from "@/components/login/LoginForm";
+
+// Cambia esta URL por la imagen que quieras mostrar en el login.
+const LOGIN_IMAGE_URL =
+  "https://tica.org/wp-content/uploads/2024/04/kitty-puppy-scaled.jpg";
+
+function PawMark() {
+  return (
+    <span className="flex size-9 items-center justify-center rounded-full bg-ink text-background">
+      <svg viewBox="0 0 32 32" className="size-5" fill="currentColor" aria-hidden="true">
+        <ellipse cx="16" cy="20" rx="7" ry="6" />
+        <ellipse cx="7.5" cy="14" rx="3" ry="4" transform="rotate(-25 7.5 14)" />
+        <ellipse cx="24.5" cy="14" rx="3" ry="4" transform="rotate(25 24.5 14)" />
+        <ellipse cx="12" cy="8" rx="2.8" ry="3.5" transform="rotate(-8 12 8)" />
+        <ellipse cx="20" cy="8" rx="2.8" ry="3.5" transform="rotate(8 20 8)" />
+      </svg>
+    </span>
+  );
+}
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen overflow-x-hidden bg-background text-ink">
-      <Navbar />
+    <div className="grid min-h-screen bg-background text-ink lg:grid-cols-2">
+      {/* Mitad izquierda: imagen (cambia la URL en LOGIN_IMAGE_URL) */}
+      <aside className="relative hidden lg:block">
+        <img
+          src={LOGIN_IMAGE_URL}
+          alt=""
+          className="absolute inset-0 size-full object-cover"
+        />
+      </aside>
 
-      <main className="mx-auto max-w-[1440px] px-5 pb-24 pt-32 sm:px-8 lg:px-12 lg:pt-40">
-        <div className="grid lg:grid-cols-[0.85fr_1.15fr]">
-          <aside className="relative overflow-hidden bg-ink p-8 text-background sm:p-12 lg:p-14">
-            <div className="absolute -bottom-10 -right-10 hidden size-40 bg-cards lg:block" aria-hidden="true" />
-            <div className="absolute -bottom-4 right-24 hidden size-20 bg-accent-warm lg:block" aria-hidden="true" />
+      {/* Mitad derecha: formulario sobre degradado */}
+      <div className="flex min-h-screen flex-col bg-linear-to-br from-cards to-cards-2">
+        <header className="flex items-center justify-between px-6 py-6 sm:px-10">
+          <Link to="/" className="flex items-center gap-2.5" aria-label="PetMatch, inicio">
+            <PawMark />
+            <span className="font-heading text-2xl font-bold">PetMatch</span>
+          </Link>
+          <Link
+            to="/"
+            className="rounded-full bg-white/60 px-5 py-2.5 text-sm font-extrabold transition-colors hover:bg-white"
+          >
+            ← Volver al inicio
+          </Link>
+        </header>
 
-            <div className="relative">
-              <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-accent">
-                Bienvenido de vuelta
-              </p>
-              <h1 className="mt-4 font-heading text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
-                Tu refugio, en un solo lugar
-              </h1>
-              <p className="mt-5 max-w-sm text-base leading-7 text-background/80">
-                Gestiona tus mascotas, revisa solicitudes de adopción y da seguimiento a cada
-                nueva historia.
-              </p>
-
-              <p className="mt-10 max-w-sm border-t border-background/20 pt-6 text-sm leading-6 text-background/75">
-                ¿Eres adoptante? Usa la app móvil de PetMatch para Android. Este panel web es solo
-                para refugios y administradores.
-              </p>
-            </div>
-          </aside>
-
-          <section className="bg-cards-2/40 p-8 sm:p-12 lg:p-16">
+        <main className="flex flex-1 items-center justify-center px-6 pb-16 pt-4 sm:px-10">
+          <div className="w-full max-w-md">
             <LoginForm />
-          </section>
-        </div>
-      </main>
-
-      <Footer />
+          </div>
+        </main>
+      </div>
     </div>
   );
 }

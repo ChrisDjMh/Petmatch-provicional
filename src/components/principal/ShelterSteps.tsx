@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import Reveal from "@/components/compartidos/Reveal";
 import Section from "@/components/compartidos/Section";
 /* ============================================================================
    CÓMO CAMBIAR LAS IMÁGENES DEL CARRUSEL
@@ -69,7 +70,7 @@ export default function ShelterSteps() {
 
   return (
     <Section id="como-funciona" className="pb-24 pt-28 sm:pb-32 sm:pt-36">
-      <div className="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+      <Reveal className="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
         <div>
           <p className="eyebrow">Registro paso a paso</p>
           <h2 className="section-title mt-4">Registra tu refugio en cinco pasos</h2>
@@ -78,8 +79,9 @@ export default function ShelterSteps() {
           Del formulario a tu primera mascota publicada: así es el camino para que tu refugio
           forme parte de PetMatch.
         </p>
-      </div>
+      </Reveal>
 
+      <Reveal delay={150}>
       <div role="group" aria-roledescription="carrusel" aria-label="Pasos para registrar tu refugio">
         <p className="sr-only" aria-live="polite">
           Paso {current + 1} de {total}: {STEPS[current].title}
@@ -125,7 +127,13 @@ export default function ShelterSteps() {
                   <div className="absolute inset-0 bg-linear-to-r from-ink/80 via-ink/40 to-transparent" />
 
                   <div className="absolute inset-y-0 left-0 flex items-center p-4 sm:p-8 lg:p-12">
-                    <div className="max-w-sm border border-background/30 bg-background/15 p-6 text-background backdrop-blur-md sm:p-8">
+                    <div
+                      className={`max-w-sm border border-background/30 bg-background/15 p-6 text-background backdrop-blur-md transition-all duration-700 ease-out sm:p-8 ${
+                        index === current
+                          ? "translate-x-0 opacity-100 delay-300"
+                          : "-translate-x-8 opacity-0"
+                      }`}
+                    >
                     <div className="flex items-center gap-3.5">
                         <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-accent font-heading text-lg font-bold text-ink sm:size-11 sm:text-xl">
                         {index + 1}
@@ -149,7 +157,7 @@ export default function ShelterSteps() {
               type="button"
               onClick={() => go(current - 1)}
               aria-label="Paso anterior"
-              className="flex size-11 items-center justify-center rounded-full bg-background/90 text-lg font-bold text-ink transition-colors hover:bg-background"
+              className="flex size-11 items-center justify-center rounded-full bg-background/90 text-lg font-bold text-ink transition hover:scale-110 hover:bg-background active:scale-95"
             >
               ←
             </button>
@@ -157,7 +165,7 @@ export default function ShelterSteps() {
               type="button"
               onClick={() => go(current + 1)}
               aria-label="Paso siguiente"
-              className="flex size-11 items-center justify-center rounded-full bg-accent text-lg font-bold text-ink transition-colors hover:bg-background"
+              className="flex size-11 items-center justify-center rounded-full bg-accent text-lg font-bold text-ink transition hover:scale-110 hover:bg-background active:scale-95"
             >
               →
             </button>
@@ -201,6 +209,7 @@ export default function ShelterSteps() {
           <span aria-hidden="true">→</span>
         </a>
       </div>
+      </Reveal>
     </Section>
   );
 }

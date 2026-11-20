@@ -1,10 +1,15 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { useEffect } from "react";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import Footer from "./components/compartidos/Footer";
 import Hero from "./components/principal/Hero";
 import Navbar from "./components/compartidos/Navbar";
+import Reveal from "./components/compartidos/Reveal";
 import Section from "./components/compartidos/Section";
 import ShelterSteps from "./components/principal/ShelterSteps";
 import LoginPage from "@/pages/LoginPage";
+import ForgotPasswordPage from "@/pages/ForgotPasswordPage";
+import ResetPasswordPage from "@/pages/ResetPasswordPage";
+import RegisterShelterPage from "@/pages/RegisterShelterPage";
 
 const criteria = [
   { number: "01", label: "Espacio disponible" },
@@ -27,9 +32,13 @@ function LandingPage() {
         <ShelterSteps />
 
         <Section className="pb-24 sm:pb-32">
+          <Reveal direction="scale">
           <div className="relative overflow-hidden rounded-[2.75rem] bg-accent px-6 py-16 sm:px-12 lg:px-20 lg:py-20">
-            <div className="absolute -right-14 -top-24 size-72 rounded-full border-[44px] border-cards-2/50" />
-            <div className="absolute -bottom-24 right-48 size-44 rounded-full bg-accent-warm/70" />
+            <div className="anim-float absolute -right-14 -top-24 size-72 rounded-full border-[44px] border-cards-2/50" />
+            <div
+              className="anim-float absolute -bottom-24 right-48 size-44 rounded-full bg-accent-warm/70"
+              style={{ animationDuration: "11s", animationDelay: "-3s" }}
+            />
             <div className="relative max-w-3xl">
               <p className="eyebrow">Crezcamos juntos</p>
               <h2 className="section-title mt-4">¿Tienes un refugio? Súmate a PetMatch</h2>
@@ -43,6 +52,7 @@ function LandingPage() {
               </a>
             </div>
           </div>
+          </Reveal>
         </Section>
       </main>
       <Footer />
@@ -50,14 +60,32 @@ function LandingPage() {
   );
 }
 
-export default function App() {
+/* Al cambiar de página: sube al inicio y la nueva página aparece con un fade. */
+function AnimatedRoutes() {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (!location.hash) window.scrollTo(0, 0);
+  }, [location.pathname, location.hash]);
+
   return (
-    <BrowserRouter>
-      <Routes>
+    <div key={location.pathname} className="anim-fade-in">
+      <Routes location={location}>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="*" element={<LandingPage />} />
+        <Route path="/olvide-contrasena" element={<ForgotPasswordPage />} />
+        <Route path="/nueva-contrasena" element={<ResetPasswordPage />} />
+        <Route path="/registro-refugio" element={<RegisterShelterPage />} />
       </Routes>
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AnimatedRoutes />
     </BrowserRouter>
   );
 }

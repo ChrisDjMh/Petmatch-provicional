@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const links = [
@@ -23,9 +23,21 @@ function PawMark() {
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-ink/10 bg-background/60 backdrop-blur-lg">
+    <header
+      className={`anim-slide-down fixed inset-x-0 top-0 z-50 border-b border-ink/10 backdrop-blur-lg transition-[background-color,box-shadow] duration-300 ${
+        scrolled ? "bg-background/85 shadow-soft" : "bg-background/60"
+      }`}
+    >
       <nav className="mx-auto flex max-w-[1440px] items-center justify-between px-5 py-5 sm:px-8 lg:px-12">
         <Link to="/" className="flex items-center gap-2.5" aria-label="PetMatch, inicio">
           <PawMark />
@@ -68,7 +80,7 @@ export default function Navbar() {
       </nav>
 
       {isOpen && (
-        <div className="mx-5 mb-5 max-h-[calc(100vh-7rem)] overflow-y-auto rounded-[2rem] bg-cards-2/40 p-5 lg:hidden">
+        <div className="anim-fade-up mx-5 mb-5 max-h-[calc(100vh-7rem)] overflow-y-auto rounded-[2rem] bg-cards-2/40 p-5 lg:hidden">
           <div className="flex flex-col gap-1">
             {links.map((link) => (
               <a

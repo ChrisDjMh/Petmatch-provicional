@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
+import Reveal from "./Reveal";
 
 export default function Footer() {
   return (
     <footer className="bg-ink px-5 py-12 text-background sm:px-8 lg:px-12">
+      <Reveal direction="fade">
       <div className="mx-auto max-w-[1344px]">
         <div className="flex flex-col justify-between gap-10 border-b border-background/20 pb-10 md:flex-row md:items-center">
           <div>
@@ -23,9 +25,10 @@ export default function Footer() {
           </div>
         </div>
         <p className="pt-7 text-xs text-background/50">
-          © 2025 PetMatch. Todos los derechos reservados.
+          © 2026 PetMatch. Todos los derechos reservados.
         </p>
       </div>
+      </Reveal>
     </footer>
   );
 }
