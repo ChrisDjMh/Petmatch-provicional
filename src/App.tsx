@@ -10,6 +10,10 @@ import LoginPage from "@/pages/LoginPage";
 import ForgotPasswordPage from "@/pages/ForgotPasswordPage";
 import ResetPasswordPage from "@/pages/ResetPasswordPage";
 import RegisterShelterPage from "@/pages/RegisterShelterPage";
+import ShelterRequestStatusPage from "@/pages/ShelterRequestStatusPage";
+import PrivacyPolicyPage from "@/pages/PrivacyPolicyPage";
+import ConfirmEmailPage from "@/pages/ConfirmEmailPage";
+import SuperAdminLoginPage from "@/pages/SuperAdminLoginPage";
 
 const criteria = [
   { number: "01", label: "Espacio disponible" },
@@ -77,6 +81,10 @@ function AnimatedRoutes() {
         <Route path="/olvide-contrasena" element={<ForgotPasswordPage />} />
         <Route path="/nueva-contrasena" element={<ResetPasswordPage />} />
         <Route path="/registro-refugio" element={<RegisterShelterPage />} />
+        <Route path="/mi-solicitud" element={<ShelterRequestStatusPage />} />
+        <Route path="/aviso-de-privacidad" element={<PrivacyPolicyPage />} />
+        <Route path="/confirmar-correo" element={<ConfirmEmailPage />} />
+        <Route path="/acceso-interno" element={<SuperAdminLoginPage />} />
       </Routes>
     </div>
   );
