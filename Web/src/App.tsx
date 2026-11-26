@@ -30,6 +30,8 @@ import ShelterDonationsPage from "@/pages/refugio/DonationsPage";
 import ShelterScheduleInterviewsPage from "@/pages/refugio/ScheduleInterviewsPage";
 import ShelterAgendaPage from "@/pages/refugio/AgendaPage";
 import InterviewsPage from "@/pages/superadmin/InterviewsPage";
+import SuperAdminHomePage from "@/pages/superadmin/HomePage";
+import CategoriesPage from "@/pages/superadmin/CategoriesPage";
 
 
 const criteria = [
@@ -119,6 +121,8 @@ function AnimatedRoutes() {
         <Route path="/refugio/entrevistas" element={<ShelterScheduleInterviewsPage />} />
         <Route path="/refugio/entrevistas/agenda" element={<ShelterAgendaPage />} />
         <Route path="/admin/entrevistas" element={<InterviewsPage />} />
+        <Route path="/admin/inicio" element={<SuperAdminHomePage />} />
+        <Route path="/admin/categorias" element={<CategoriesPage />} /> 
       </Routes>
     </div>
   );

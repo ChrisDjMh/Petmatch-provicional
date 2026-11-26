@@ -1,4 +1,4 @@
-import { useHref, useLinkClickHandler, useMatch } from "react-router-dom";
+import { useHref, useLinkClickHandler, useLocation } from "react-router-dom";
 
 export type OctagonNavItem = {
   label: string;
@@ -54,7 +54,7 @@ function wedge(orientation: OctagonOrientation, index: number, total: number) {
   };
 }
 
-const fontSizeFor = (total: number) => (total > 4 ? 12 : 14.5);
+const fontSizeFor = (total: number) => (total > 5 ? 11 : total > 4 ? 12 : 14.5);
 
 function WedgeLabel({
   lines,
@@ -96,7 +96,8 @@ type WedgeProps = {
 function LinkWedge({ item, orientation, index, total }: WedgeProps) {
   const href = useHref(item.to);
   const handleClick = useLinkClickHandler<HTMLAnchorElement>(item.to);
-  const isActive = useMatch({ path: item.to, end: false }) !== null;
+  const { pathname } = useLocation();
+  const isActive = [item.to, ...(item.also ?? [])].some((path) => pathname === path || pathname.startsWith(`${path}/`));
   const shape = wedge(orientation, index, total);
 
   return (
