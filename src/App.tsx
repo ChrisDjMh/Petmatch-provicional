@@ -14,6 +14,17 @@ import ShelterRequestStatusPage from "@/pages/ShelterRequestStatusPage";
 import PrivacyPolicyPage from "@/pages/PrivacyPolicyPage";
 import ConfirmEmailPage from "@/pages/ConfirmEmailPage";
 import SuperAdminLoginPage from "@/pages/SuperAdminLoginPage";
+import PendingRequestsPage from "@/pages/superadmin/PendingRequestsPage";
+import RequestDetailPage from "@/pages/superadmin/RequestDetailPage";
+import ActiveSheltersPage from "@/pages/superadmin/ActiveSheltersPage";
+import DonationsPage from "@/pages/superadmin/DonationsPage";
+import LogPage from "@/pages/superadmin/LogPage";
+import ShelterHomePage from "@/pages/refugio/HomePage";
+import ShelterPetsPage from "@/pages/refugio/PetsPage";
+import ShelterAdoptionsPage from "@/pages/refugio/AdoptionsPage";
+import ShelterAdoptionDetailPage from "@/pages/refugio/AdoptionDetailPage";
+
+
 
 const criteria = [
   { number: "01", label: "Espacio disponible" },
@@ -85,6 +96,16 @@ function AnimatedRoutes() {
         <Route path="/aviso-de-privacidad" element={<PrivacyPolicyPage />} />
         <Route path="/confirmar-correo" element={<ConfirmEmailPage />} />
         <Route path="/acceso-interno" element={<SuperAdminLoginPage />} />
+        <Route path="/admin/solicitudes" element={<PendingRequestsPage />} />
+        <Route path="/admin/solicitudes/:id" element={<RequestDetailPage />} />
+        <Route path="/admin/refugios" element={<ActiveSheltersPage />} />
+        <Route path="/admin/donaciones" element={<DonationsPage />} />
+        <Route path="/admin/bitacora" element={<LogPage />} />
+        <Route path="/refugio/inicio" element={<ShelterHomePage />} />
+        <Route path="/refugio/mascotas" element={<ShelterPetsPage />} />
+        <Route path="/refugio/adopciones" element={<ShelterAdoptionsPage />} />
+        <Route path="/refugio/adopciones/:id" element={<ShelterAdoptionDetailPage />} />
+ 
       </Routes>
     </div>
   );
