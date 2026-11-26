@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import ShelterAdminLayout from "@/components/panel/ShelterAdminLayout";
 import ConfirmDialog from "@/components/panel/ConfirmDialog";
-import { initialPets, type Pet, type PetStatus } from "@/data/mascotas";
+import type { Pet, PetStatus } from "@/data/mascotas";
+import { listPets, removePet } from "@/data/mascotasStore";
 
 const STATUS_BADGE: Record<PetStatus, { label: string; className: string }> = {
   disponible: { label: "Disponible", className: "bg-accent" },
@@ -25,9 +26,14 @@ const buttonBase =
 
 export default function PetsPage() {
   // Por ahora solo frontend: los cambios no se guardan; con backend se enviarán a la API (RF-22).
-  const [pets, setPets] = useState<Pet[]>(initialPets);
+  const [pets, setPets] = useState<Pet[]>(() => listPets());
   const [deleting, setDeleting] = useState<Pet | null>(null);
-  const [message, setMessage] = useState<{ kind: "ok" | "error"; text: string } | null>(null);
+  // El formulario de mascota (RF-20, RF-21) deja aquí su aviso al guardar.
+  const location = useLocation();
+  const [message, setMessage] = useState<{ kind: "ok" | "error"; text: string } | null>(() => {
+    const saved = (location.state as { message?: string } | null)?.message;
+    return saved ? { kind: "ok", text: saved } : null;
+  });
 
   function askDelete(pet: Pet) {
     if (!canDelete(pet)) {
@@ -48,6 +54,7 @@ export default function PetsPage() {
     if (!deleting) return;
     const target = deleting;
     // Eliminar la oculta de la app y de esta lista; su historial se conserva (RF-22).
+    removePet(target.id);
     setPets((list) => list.filter((p) => p.id !== target.id));
     setMessage({
       kind: "ok",

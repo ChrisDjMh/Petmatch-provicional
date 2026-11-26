@@ -25,7 +25,8 @@ import ShelterAdoptionsPage from "@/pages/refugio/AdoptionsPage";
 import ShelterAdoptionDetailPage from "@/pages/refugio/AdoptionDetailPage";
 import ShelterContractPage from "@/pages/refugio/ContractPage";
 import ShelterFollowUpPage from "@/pages/refugio/FollowUpPage";
-
+import ShelterPetFormPage from "@/pages/refugio/PetFormPage";
+import ShelterDonationsPage from "@/pages/refugio/DonationsPage";
 
 
 
@@ -110,6 +111,9 @@ function AnimatedRoutes() {
         <Route path="/refugio/adopciones/:id" element={<ShelterAdoptionDetailPage />} />
         <Route path="/refugio/adopciones/:id/contrato" element={<ShelterContractPage />} />
         <Route path="/refugio/adopciones/seguimiento" element={<ShelterFollowUpPage />} />
+        <Route path="/refugio/mascotas/nueva" element={<ShelterPetFormPage />} />
+        <Route path="/refugio/mascotas/:id/editar" element={<ShelterPetFormPage />} />
+        <Route path="/refugio/donaciones" element={<ShelterDonationsPage />} />
       </Routes>
     </div>
   );
