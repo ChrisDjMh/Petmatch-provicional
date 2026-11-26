@@ -4,7 +4,7 @@ export type Species = "Perro" | "Gato" | "Otra";
 export type PetSize = "Pequeño" | "Mediano" | "Grande";
 export type PetSex = "Macho" | "Hembra";
 /* RN-04: Disponible → En proceso de adopción (solicitud aprobada) → Adoptada (entrega registrada). */
-export type PetStatus = "disponible" | "en-proceso" | "adoptada";
+export type PetStatus = "disponible" | "en-proceso" | "adoptada" | "oculta";
 
 export type Pet = {
   id: string;

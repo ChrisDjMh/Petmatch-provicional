@@ -144,6 +144,8 @@ const STATUS_NOTE: Record<Exclude<PetStatus, "disponible">, string> = {
     "Esta mascota tiene una adopción aprobada. Puedes corregir sus datos, pero cambiar los requisitos no afecta esa solicitud.",
   adoptada:
     "Esta mascota ya fue adoptada. Puedes corregir sus datos, pero no vuelve a aparecer en la app.",
+  oculta:
+    "Esta mascota está oculta y no aparece para los adoptantes. Puedes editarla o volver a publicarla desde la lista de mascotas.",
 };
 
 function PetForm({ petId }: { petId: string | null }) {

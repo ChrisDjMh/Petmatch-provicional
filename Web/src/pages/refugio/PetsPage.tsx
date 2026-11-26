@@ -3,12 +3,13 @@ import { Link, useLocation } from "react-router-dom";
 import ShelterAdminLayout from "@/components/panel/ShelterAdminLayout";
 import ConfirmDialog from "@/components/panel/ConfirmDialog";
 import type { Pet, PetStatus } from "@/data/mascotas";
-import { listPets, removePet } from "@/data/mascotasStore";
+import { listPets, removePet, setPetVisibility } from "@/data/mascotasStore";
 
 const STATUS_BADGE: Record<PetStatus, { label: string; className: string }> = {
   disponible: { label: "Disponible", className: "bg-accent" },
   "en-proceso": { label: "En proceso de adopción", className: "bg-white" },
   adoptada: { label: "Adoptada", className: "bg-ink text-background" },
+  oculta: { label: "Oculta", className: "bg-cards-2" },
 };
 
 function ageLabel(years: number, months: number) {
@@ -19,7 +20,8 @@ function ageLabel(years: number, months: number) {
 
 /* RF-22: no se puede eliminar una mascota con adopción aprobada ("En proceso de adopción") ni concretada
    ("Adoptada"). */
-const canDelete = (pet: Pet) => pet.status === "disponible";
+const canDelete = (pet: Pet) => pet.status === "disponible" || pet.status === "oculta";
+const canChangeVisibility = (pet: Pet) => pet.status === "disponible" || pet.status === "oculta";
 
 const buttonBase =
   "inline-flex flex-1 items-center justify-center rounded-full px-4 py-2.5 text-sm font-extrabold transition hover:-translate-y-0.5 active:scale-[0.98]";
@@ -48,6 +50,25 @@ export default function PetsPage() {
     }
     setMessage(null);
     setDeleting(pet);
+  }
+
+  function toggleVisibility(pet: Pet) {
+    if (!canChangeVisibility(pet)) {
+      setMessage({
+        kind: "error",
+        text: `No se puede ocultar ${pet.name}: tiene una adopción aprobada o concretada.`,
+      });
+      return;
+    }
+    const hidden = pet.status === "disponible";
+    const updated = setPetVisibility(pet.id, hidden);
+    setPets((list) => list.map((item) => (item.id === updated.id ? updated : item)));
+    setMessage({
+      kind: "ok",
+      text: hidden
+        ? `${pet.name} quedó oculta. Su ficha e historial se conservaron.`
+        : `${pet.name} volvió a estar disponible.`,
+    });
   }
 
   function confirmDelete() {
@@ -141,7 +162,17 @@ export default function PetsPage() {
                 </p>
                 <p className="text-sm text-ink/60">{ageLabel(pet.ageYears, pet.ageMonths)}</p>
 
-                <div className="mt-5 flex gap-2 pt-1">
+                <div className="mt-5 flex flex-wrap gap-2 pt-1">
+                  {canChangeVisibility(pet) && (
+                    <button
+                      type="button"
+                      onClick={() => toggleVisibility(pet)}
+                      className={`${buttonBase} basis-full border-2 border-ink/80 hover:bg-cards-2/40`}
+                    >
+                      {pet.status === "oculta" ? "Volver a publicar" : "Ocultar mascota"}
+                      <span className="sr-only"> a {pet.name}</span>
+                    </button>
+                  )}
                   <Link
                     to={`/refugio/mascotas/${pet.id}/editar`}
                     className={`${buttonBase} bg-accent hover:bg-accent-warm`}
@@ -151,9 +182,9 @@ export default function PetsPage() {
                   <button
                     type="button"
                     onClick={() => askDelete(pet)}
-                    aria-disabled={!canDelete(pet)}
+                    disabled={!canDelete(pet)}
                     className={`${buttonBase} border-2 border-ink/80 hover:bg-cards-2/40 ${
-                      canDelete(pet) ? "" : "opacity-50"
+                      canDelete(pet) ? "" : "cursor-not-allowed opacity-50"
                     }`}
                   >
                     Eliminar<span className="sr-only"> a {pet.name}</span>
@@ -173,8 +204,8 @@ export default function PetsPage() {
         onConfirm={confirmDelete}
       >
         <p>
-          Dejará de aparecer en la app y en tu lista. Su historial se conserva, pero no podrás volver a
-          publicarla desde aquí.
+          Se quitará de este catálogo de demostración. Para conservar la ficha y el historial sin eliminarla,
+          utiliza primero la opción «Ocultar mascota».
         </p>
       </ConfirmDialog>
     </ShelterAdminLayout>

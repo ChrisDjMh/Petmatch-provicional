@@ -18,6 +18,7 @@ import PendingRequestsPage from "@/pages/superadmin/PendingRequestsPage";
 import RequestDetailPage from "@/pages/superadmin/RequestDetailPage";
 import ActiveSheltersPage from "@/pages/superadmin/ActiveSheltersPage";
 import DonationsPage from "@/pages/superadmin/DonationsPage";
+import AdminDeliveriesPage from "@/pages/superadmin/DeliveriesPage";
 import LogPage from "@/pages/superadmin/LogPage";
 import ShelterHomePage from "@/pages/refugio/HomePage";
 import ShelterPetsPage from "@/pages/refugio/PetsPage";
@@ -32,6 +33,9 @@ import ShelterAgendaPage from "@/pages/refugio/AgendaPage";
 import InterviewsPage from "@/pages/superadmin/InterviewsPage";
 import SuperAdminHomePage from "@/pages/superadmin/HomePage";
 import CategoriesPage from "@/pages/superadmin/CategoriesPage";
+import ShelterPhotosPage from "@/pages/refugio/ShelterPhotosPage";
+import ShelterCategoriesPage from "@/pages/refugio/CategoriesPage";
+import ShelterDeliveriesPage from "@/pages/refugio/DeliveriesPage";
 
 
 const criteria = [
@@ -108,6 +112,7 @@ function AnimatedRoutes() {
         <Route path="/admin/solicitudes/:id" element={<RequestDetailPage />} />
         <Route path="/admin/refugios" element={<ActiveSheltersPage />} />
         <Route path="/admin/donaciones" element={<DonationsPage />} />
+        <Route path="/admin/entregas" element={<AdminDeliveriesPage />} />
         <Route path="/admin/bitacora" element={<LogPage />} />
         <Route path="/refugio/inicio" element={<ShelterHomePage />} />
         <Route path="/refugio/mascotas" element={<ShelterPetsPage />} />
@@ -120,6 +125,9 @@ function AnimatedRoutes() {
         <Route path="/refugio/donaciones" element={<ShelterDonationsPage />} />
         <Route path="/refugio/entrevistas" element={<ShelterScheduleInterviewsPage />} />
         <Route path="/refugio/entrevistas/agenda" element={<ShelterAgendaPage />} />
+        <Route path="/refugio/entregas" element={<ShelterDeliveriesPage />} />
+        <Route path="/refugio/fotos" element={<ShelterPhotosPage />} />
+        <Route path="/refugio/categorias" element={<ShelterCategoriesPage />} />
         <Route path="/admin/entrevistas" element={<InterviewsPage />} />
         <Route path="/admin/inicio" element={<SuperAdminHomePage />} />
         <Route path="/admin/categorias" element={<CategoriesPage />} /> 

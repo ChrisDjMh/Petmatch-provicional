@@ -126,3 +126,16 @@ export function removePet(id: string) {
   pets = pets.filter((p) => p.id !== id);
   details.delete(id);
 }
+
+/** Oculta o vuelve a publicar una mascota disponible sin borrar su ficha ni su historial.
+ * No permite cambiar visibilidad cuando existe una adopción aprobada o concretada. */
+export function setPetVisibility(id: string, hidden: boolean): Pet {
+  const current = pets.find((pet) => pet.id === id);
+  if (!current) throw new Error("No encontramos esta mascota.");
+  if (current.status === "en-proceso" || current.status === "adoptada") {
+    throw new Error("No se puede ocultar una mascota con adopción aprobada o concretada.");
+  }
+  const updated: Pet = { ...current, status: hidden ? "oculta" : "disponible" };
+  pets = pets.map((pet) => (pet.id === id ? updated : pet));
+  return { ...updated };
+}
