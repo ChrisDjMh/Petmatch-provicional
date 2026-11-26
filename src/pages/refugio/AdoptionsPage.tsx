@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import ShelterAdminLayout from "@/components/panel/ShelterAdminLayout";
+import AdoptionTabs from "@/components/panel/AdoptionTabs";
 import { adoptionRequests, type AdoptionStatus } from "@/data/adopciones";
 
 const dateFormat = new Intl.DateTimeFormat("es-MX", {
@@ -58,7 +59,9 @@ export default function AdoptionsPage() {
         Solicitudes de adopción de las mascotas de tu refugio, de la más reciente a la más antigua.
       </p>
 
-      <div role="group" aria-label="Filtrar por estado" className="mt-8 flex flex-wrap gap-2">
+      <AdoptionTabs />
+
+      <div role="group" aria-label="Filtrar por estado" className="mt-6 flex flex-wrap gap-2">
         {FILTERS.map((item) => (
           <button
             key={item.key}

@@ -2,7 +2,10 @@ import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import ShelterAdminLayout from "@/components/panel/ShelterAdminLayout";
 import AdoptionDecisionPanel, { type AdoptionDecision } from "@/components/panel/AdoptionDecisionPanel";
-import { getAdoptionDetail, type AdoptionStatus } from "@/data/adopciones";
+import ContractCard from "@/components/panel/ContractCard";
+import DeliveryCard from "@/components/panel/DeliveryCard";
+import { adoptionRequests, getAdoptionDetail, type AdoptionStatus } from "@/data/adopciones";
+import { getDeliveryDate } from "@/data/entregas";
 import { evaluateCompatibility, MIN_CRITERIA } from "@/lib/compatibilidad";
 
 const dateFormat = new Intl.DateTimeFormat("es-MX", {
@@ -12,6 +15,7 @@ const dateFormat = new Intl.DateTimeFormat("es-MX", {
   hour: "2-digit",
   minute: "2-digit",
 });
+const dayFormat = new Intl.DateTimeFormat("es-MX", { day: "numeric", month: "long", year: "numeric" });
 
 const STATUS_BADGE: Record<AdoptionStatus, { label: string; className: string }> = {
   pendiente: { label: "Pendiente", className: "bg-accent" },
@@ -25,8 +29,10 @@ const backLinkClass = "inline-flex items-center gap-2 text-sm font-extrabold und
 export default function AdoptionDetailPage() {
   const { id = "" } = useParams();
   const request = getAdoptionDetail(id);
-  // Por ahora solo frontend: la decisión no se guarda; con backend se enviará a la API (RF-37).
+  // Por ahora solo frontend: nada se guarda; con backend se enviará a la API (RF-37, RF-39, RF-40).
   const [decision, setDecision] = useState<AdoptionDecision | null>(null);
+  const [deliveryDate, setDeliveryDate] = useState<string | undefined>(getDeliveryDate(id));
+  const [cancelReason, setCancelReason] = useState<string | null>(null);
 
   if (!request) {
     return (
@@ -48,8 +54,22 @@ export default function AdoptionDetailPage() {
   }
 
   const { criteria, metCount, compatible } = evaluateCompatibility(request.profile, request.petRequirements);
-  const status: AdoptionStatus = decision ? (decision.action === "approve" ? "aprobada" : "rechazada") : request.status;
-  const reason = decision?.text ?? request.decisionReason;
+  const status: AdoptionStatus =
+    cancelReason !== null
+      ? "cancelada"
+      : decision
+        ? decision.action === "approve"
+          ? "aprobada"
+          : "rechazada"
+        : request.status;
+  const reason = cancelReason ?? decision?.text ?? request.decisionReason;
+  const delivered = status === "aprobada" && deliveryDate !== undefined;
+  const badge = delivered ? { label: "Entregada", className: "bg-ink text-background" } : STATUS_BADGE[status];
+
+  // RN-11: al registrar la entrega se cierran las demás solicitudes pendientes por la misma mascota.
+  const otherPending = adoptionRequests.filter(
+    (r) => r.pet === request.pet && r.status === "pendiente" && r.id !== request.id,
+  ).length;
 
   const answers = [
     { label: "Tipo de vivienda", value: request.housingType },
@@ -77,8 +97,8 @@ export default function AdoptionDetailPage() {
             Enviada el {dateFormat.format(new Date(request.sentAt))}
           </p>
         </div>
-        <span className={`anim-fade-up inline-flex rounded-full px-4 py-2 text-sm font-extrabold ${STATUS_BADGE[status].className}`}>
-          {STATUS_BADGE[status].label}
+        <span className={`anim-fade-up inline-flex rounded-full px-4 py-2 text-sm font-extrabold ${badge.className}`}>
+          {badge.label}
         </span>
       </div>
 
@@ -144,7 +164,11 @@ export default function AdoptionDetailPage() {
           </section>
         </div>
 
-        <aside style={{ animationDelay: "320ms" }} className="anim-fade-up xl:sticky xl:top-6">
+        {/* Solo el panel de decisión se queda fijo al hacer scroll: las demás tarjetas son más altas que la pantalla. */}
+        <aside
+          style={{ animationDelay: "320ms" }}
+          className={`anim-fade-up ${status === "pendiente" ? "xl:sticky xl:top-6" : ""}`}
+        >
           {status === "pendiente" ? (
             <AdoptionDecisionPanel
               adopter={request.adopter}
@@ -153,29 +177,50 @@ export default function AdoptionDetailPage() {
               onDecide={setDecision}
             />
           ) : (
-            <div role="status" className="rounded-[2rem] bg-white/70 p-8 shadow-soft backdrop-blur">
-              <h2 className="font-heading text-3xl font-bold">
-                {status === "aprobada" && "Solicitud aprobada"}
-                {status === "rechazada" && "Solicitud rechazada"}
-                {status === "cancelada" && "Adopción cancelada"}
-              </h2>
-              <p className="mt-2 leading-7 text-ink/75">
-                {status === "aprobada" &&
-                  (decision
-                    ? `${request.pet} pasó a "En proceso de adopción" y se avisó a ${request.adopter}.`
-                    : `Esta solicitud ya fue aprobada.`)}
-                {status === "rechazada" && "El adoptante recibió el motivo en su teléfono."}
-                {status === "cancelada" && "La adopción se canceló antes de registrar la entrega."}
-              </p>
-              {reason && (
-                <blockquote className="mt-4 rounded-2xl bg-cards-2/40 p-4 text-sm leading-6">{reason}</blockquote>
+            <div className="space-y-6">
+              <div role="status" className="rounded-[2rem] bg-white/70 p-8 shadow-soft backdrop-blur">
+                <h2 className="font-heading text-3xl font-bold">
+                  {delivered && "Adopción concretada"}
+                  {status === "aprobada" && !delivered && "Solicitud aprobada"}
+                  {status === "rechazada" && "Solicitud rechazada"}
+                  {status === "cancelada" && "Adopción cancelada"}
+                </h2>
+                <p className="mt-2 leading-7 text-ink/75">
+                  {delivered &&
+                    `${request.pet} se entregó el ${dayFormat.format(new Date(`${deliveryDate}T12:00:00`))} y ya está Adoptada.`}
+                  {status === "aprobada" &&
+                    !delivered &&
+                    (decision
+                      ? `${request.pet} pasó a "En proceso de adopción" y se avisó a ${request.adopter}.`
+                      : "Esta solicitud ya fue aprobada.")}
+                  {status === "rechazada" && "El adoptante recibió el motivo en su teléfono."}
+                  {status === "cancelada" &&
+                    (cancelReason !== null
+                      ? `${request.pet} volvió a estar disponible y se avisó a ${request.adopter}.`
+                      : "La adopción se canceló antes de registrar la entrega.")}
+                </p>
+                {reason && (
+                  <blockquote className="mt-4 rounded-2xl bg-cards-2/40 p-4 text-sm leading-6">{reason}</blockquote>
+                )}
+                <Link
+                  to="/refugio/adopciones"
+                  className="mt-7 flex w-full items-center justify-center rounded-full bg-ink px-6 py-4 font-extrabold text-background transition hover:-translate-y-0.5 hover:bg-ink/85"
+                >
+                  Volver a adopciones
+                </Link>
+              </div>
+              {status === "aprobada" && <ContractCard requestId={request.id} adopter={request.adopter} />}
+              {status === "aprobada" && (
+                <DeliveryCard
+                  requestId={request.id}
+                  pet={request.pet}
+                  adopter={request.adopter}
+                  otherPending={otherPending}
+                  deliveryDate={deliveryDate}
+                  onDelivered={setDeliveryDate}
+                  onCancel={setCancelReason}
+                />
               )}
-              <Link
-                to="/refugio/adopciones"
-                className="mt-7 flex w-full items-center justify-center rounded-full bg-ink px-6 py-4 font-extrabold text-background transition hover:-translate-y-0.5 hover:bg-ink/85"
-              >
-                Volver a adopciones
-              </Link>
             </div>
           )}
         </aside>

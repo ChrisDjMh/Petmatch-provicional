@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -7,28 +7,34 @@ import { TextAreaField } from "@/components/auth/TextField";
 const MIN = 10;
 const MAX = 500;
 
-const schema = z.object({
-  text: z
-    .string()
-    .trim()
-    .min(1, "Escribe el motivo de la suspensión.")
-    .min(MIN, `Escribe al menos ${MIN} caracteres para que el refugio lo entienda.`)
-    .max(MAX, `Máximo ${MAX} caracteres.`),
-});
+const buildSchema = (requiredMessage: string, audience: string) =>
+  z.object({
+    text: z
+      .string()
+      .trim()
+      .min(1, requiredMessage)
+      .min(MIN, `Escribe al menos ${MIN} caracteres para que ${audience} lo entienda.`)
+      .max(MAX, `Máximo ${MAX} caracteres.`),
+  });
 
 function ReasonForm({
   label,
   hint,
   submitLabel,
+  requiredMessage,
+  audience,
   onSubmit,
   onCancel,
 }: {
   label: string;
   hint: string;
   submitLabel: string;
+  requiredMessage: string;
+  audience: string;
   onSubmit: (text: string) => void;
   onCancel: () => void;
 }) {
+  const schema = useMemo(() => buildSchema(requiredMessage, audience), [requiredMessage, audience]);
   const {
     register,
     handleSubmit,
@@ -76,6 +82,8 @@ export default function ReasonDialog({
   label,
   hint,
   submitLabel,
+  requiredMessage = "Escribe el motivo de la suspensión.",
+  audience = "el refugio",
   onSubmit,
   onCancel,
 }: {
@@ -85,6 +93,10 @@ export default function ReasonDialog({
   label: string;
   hint: string;
   submitLabel: string;
+  /** Mensaje cuando el campo está vacío. Por defecto, el de una suspensión. */
+  requiredMessage?: string;
+  /** A quién va dirigido el texto ("el refugio", "el adoptante"), para el mensaje de largo mínimo. */
+  audience?: string;
   onSubmit: (text: string) => void;
   onCancel: () => void;
 }) {
@@ -114,6 +126,8 @@ export default function ReasonDialog({
             label={label}
             hint={hint}
             submitLabel={submitLabel}
+            requiredMessage={requiredMessage}
+            audience={audience}
             onSubmit={onSubmit}
             onCancel={onCancel}
           />
